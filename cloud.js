@@ -59,7 +59,7 @@ function post(data) {
 
 // 给所有需要填写日志的人发邮件
 AV.Cloud.define('sendEmail', function(request) {
-  qpi.getAllUsers().then(result => {
+  api.getAllUsers().then(result => {
     let users = [];
     result.forEach(item => {
       // 排除不用填写日志的人
