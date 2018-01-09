@@ -55,7 +55,7 @@ AV.Cloud.define('sendEmail', function(request) {
         });
       }
     });
-    console.log('=======================0');
+    console.log('=======================');
     console.log('准备给所有用户发送邮件：');
     console.log(JSON.stringify(users, 0, 4));
 
@@ -70,7 +70,7 @@ AV.Cloud.define('sendEmail', function(request) {
 
 AV.Cloud.define('sendEmailAgain', function(request) {
   api.getUnSubmitUsers().then(users => {
-    console.log('=======================0');
+    console.log('=======================');
     console.log('准备给未提交用户发送邮件：');
     console.log('未提交用户为:');
     console.log(JSON.stringify(users, 0, 4));
