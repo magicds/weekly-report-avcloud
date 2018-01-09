@@ -48,7 +48,7 @@ module.exports = {
         users.forEach(user => {
           if (
             !submitUser[user.id] &&
-            user.attributes.noReport &&
+            !user.attributes.noReport &&
             user.attributes.eamil
           ) {
             unsubmitUsers.push({
