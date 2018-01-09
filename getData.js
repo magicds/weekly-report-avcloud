@@ -49,11 +49,11 @@ module.exports = {
           if (
             !submitUser[user.id] &&
             !user.attributes.noReport &&
-            user.attributes.eamil
+            user.attributes.email
           ) {
             unsubmitUsers.push({
               name: user.username,
-              email: user.attributes.eamil
+              email: user.attributes.email
             });
           }
         });

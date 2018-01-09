@@ -4,18 +4,6 @@ let api = require('./getData.js');
 const http = require('http');
 const querystring = require('querystring');
 
-// const postData = querystring.stringify({
-//     user: JSON.stringify(
-//         [{
-//             name: '测试用户名',
-//             email: '516321242@qq.com'
-//         }, {
-//             name: '测试',
-//             email: '345566251@qq.com'
-//         }]
-//     ),
-//     type: 'all'
-// });
 /**
  * 一个简单的云代码方法
  */
@@ -42,9 +30,6 @@ function post(data) {
     res.setEncoding('utf8');
     res.on('data', chunk => {
       console.log(`BODY: ${chunk}`);
-    });
-    res.on('end', () => {
-      console.log('No more data in response.');
     });
   });
 
