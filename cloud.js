@@ -11,6 +11,15 @@ AV.Cloud.define('hello', function(request) {
   return 'Hello world!';
 });
 
+function writeLog(info) {
+  let date = new Date();
+  let log = AV.Object.extend('EmailLogs');
+  log.set('date', date);
+  log.set('info', info);
+  log.save().then(res => {
+    console.log('邮件发送日志已记录！');
+  });
+}
 // 发起一个post请求
 function post(data) {
   const options = {
@@ -28,8 +37,13 @@ function post(data) {
     console.log(`STATUS: ${res.statusCode}`);
     console.log(`HEADERS: ${JSON.stringify(res.headers)}`);
     res.setEncoding('utf8');
+    let info = '';
     res.on('data', chunk => {
+      info += chunk;
       console.log(`BODY: ${chunk}`);
+    });
+    res.on('end', () => {
+      writeLog(info);
     });
   });
 
