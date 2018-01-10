@@ -13,7 +13,8 @@ AV.Cloud.define('hello', function(request) {
 
 function writeLog(info) {
   let date = new Date();
-  let log = AV.Object.extend('EmailLogs');
+  let Log = AV.Object.extend('EmailLogs');
+  let log = new Log();
   log.set('date', date);
   log.set('info', info);
   log.save().then(res => {
