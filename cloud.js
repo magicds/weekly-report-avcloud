@@ -26,7 +26,7 @@ function post(data) {
   const options = {
     hostname: 'fe.epoint.com.cn',
     port: 8080,
-    path: '/fedemo/pages/weeklyreport/mail/sendmail.php',
+    path: '/weeklyreport/mail/sendmail.php',
     method: 'POST',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
