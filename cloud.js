@@ -7,7 +7,7 @@ const querystring = require('querystring');
 /**
  * 一个简单的云代码方法
  */
-AV.Cloud.define('hello', function(request) {
+AV.Cloud.define('hello', function (request) {
   return 'Hello world!';
 });
 
@@ -58,7 +58,7 @@ function post(data) {
 }
 
 // 给所有需要填写日志的人发邮件
-AV.Cloud.define('sendEmail', function(request) {
+AV.Cloud.define('sendEmail', function (request) {
   api.getAllUsers().then(result => {
     let users = [];
     result.forEach(item => {
@@ -83,10 +83,11 @@ AV.Cloud.define('sendEmail', function(request) {
   });
 });
 
-AV.Cloud.define('sendEmailAgain', function(request) {
+// 周六未填再次提醒
+AV.Cloud.define('sendEmailAgain', function (request) {
   api.getUnSubmitUsers().then(users => {
     console.log('=======================');
-    console.log('准备给未提交用户发送邮件：');
+    console.log('周六：准备给未提交用户发送邮件：');
     console.log('未提交用户为:');
     console.log(JSON.stringify(users, 0, 4));
 
@@ -97,4 +98,32 @@ AV.Cloud.define('sendEmailAgain', function(request) {
       })
     );
   });
+});
+// 周日警告提醒
+AV.Cloud.define('sendEmailwarning', function (request) {
+  api.getUnSubmitUsers().then(users => {
+    console.log('=======================');
+    console.log('周日：准备给未提交用户发送邮件：');
+    console.log('未提交用户为:');
+    console.log(JSON.stringify(users, 0, 4));
+
+    post(
+      querystring.stringify({
+        type: 'warning',
+        user: JSON.stringify(users)
+      })
+    );
+  });
+});
+
+// 接受客户端保存用户信息的请求
+AV.Cloud.define('savePersonData', function (request) {
+  let id = request.params.id;
+  let data = request.params.data;
+  let keys = Object.keys(data);
+  let person = AV.Object.createWithoutData('_User', id);
+  keys.forEach(k => {
+    person.set(k, data[k]);
+  });
+  return person.save();
 });
