@@ -6,19 +6,21 @@ module.exports = {
     return new AV.Query('_User').find();
   },
   getCurrWeekReport() {
-    const day = new Date().getDay();
-    const date = new Date().getDate();
+    const today = new Date();
+    const day = today.getDay();
+    const date = today.getDate();
+    const isoDay = day === 0 ? 7 : day;
 
     let startDate = new Date();
     let endDate = new Date();
 
-    startDate.setDate(date - day + 1);
+    startDate.setDate(date - isoDay + 1);
     startDate.setHours(0);
     startDate.setMinutes(0);
     startDate.setSeconds(0);
     startDate.setMilliseconds(0);
 
-    endDate.setDate(date + (7 - day));
+    endDate.setDate(date + (7 - isoDay));
     endDate.setHours(23);
     endDate.setMinutes(59);
     endDate.setSeconds(59);
