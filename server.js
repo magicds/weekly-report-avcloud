@@ -1,5 +1,6 @@
 'use strict';
-
+var date = new Date();
+console.log('准备启动' + date);
 var AV = require('leanengine');
 
 AV.init({
@@ -19,12 +20,12 @@ var PORT = parseInt(process.env.LEANCLOUD_APP_PORT || process.env.PORT || 3000);
 
 app.listen(PORT, function (err) {
   console.log('Node app is running on port:', PORT);
-
+  console.log('启动完成，耗时：' + (new Date() - date) + 'ms');
   // 注册全局未捕获异常处理器
-  process.on('uncaughtException', function(err) {
+  process.on('uncaughtException', function (err) {
     console.error('Caught exception:', err.stack);
   });
-  process.on('unhandledRejection', function(reason, p) {
+  process.on('unhandledRejection', function (reason, p) {
     console.error('Unhandled Rejection at: Promise ', p, ' reason: ', reason.stack);
   });
 });
