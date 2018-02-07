@@ -13,13 +13,13 @@ require('./cloud');
 var app = express();
 
 // 设置模板引擎
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
+// app.set('views', path.join(__dirname, 'views'));
+// app.set('view engine', 'ejs');
 
-app.use(express.static('public'));
+// app.use(express.static('public'));
 
 // 设置默认超时时间
-app.use(timeout('15s'));
+app.use(timeout('60s'));
 
 // 加载云引擎中间件
 app.use(AV.express());
@@ -37,7 +37,7 @@ app.get('/', function(req, res) {
 });
 
 // 可以将一类的路由单独保存在一个文件中
-app.use('/todos', require('./routes/todos'));
+// app.use('/todos', require('./routes/todos'));
 
 app.use(function(req, res, next) {
   // 如果任何一个路由都没有返回响应，则抛出一个 404 异常给后续的异常处理器
