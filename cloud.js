@@ -60,7 +60,7 @@ function post(data) {
 // 给所有需要填写日志的人发邮件
 AV.Cloud.define('sendEmail', function(request) {
   console.log('准备处理发送邮件');
-  let d = new Data();
+  let d = new Date();
   console.log(d);
   api.getAllUsers().then(result => {
     let users = [];
@@ -91,7 +91,7 @@ AV.Cloud.define('sendEmail', function(request) {
 // 周六未填再次提醒
 AV.Cloud.define('sendEmailAgain', function(request) {
   console.log('准备处理发送邮件');
-  let d = new Data();
+  let d = new Date();
   console.log(d);
   api.getUnSubmitUsers().then(users => {
     console.log('=======================');
@@ -112,7 +112,7 @@ AV.Cloud.define('sendEmailAgain', function(request) {
 // 周日警告提醒
 AV.Cloud.define('sendEmailwarning', function(request) {
   console.log('准备处理发送邮件');
-  let d = new Data();
+  let d = new Date();
   console.log(d);
   api.getUnSubmitUsers().then(users => {
     console.log('=======================');
