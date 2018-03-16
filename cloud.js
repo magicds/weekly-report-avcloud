@@ -41,7 +41,7 @@ function post(data) {
     let info = '';
     res.on('data', chunk => {
       info += chunk;
-      console.log(`BODY: ${chunk}`);
+      // console.log(`BODY: ${chunk}`);
     });
     res.on('end', () => {
       writeLog(info);
@@ -62,7 +62,7 @@ AV.Cloud.define('sendEmail', function(request) {
   console.log('准备处理发送邮件');
   let d = new Date();
   console.log(d);
-  api.getAllUsers().then(result => {
+  return api.getAllUsers().then(result => {
     let users = [];
     result.forEach(item => {
       // 排除不用填写日志的人
@@ -85,6 +85,7 @@ AV.Cloud.define('sendEmail', function(request) {
     post(data);
 
     console.log('发送处理完成, 耗时' + (+new Date() - d) + 'ms');
+    return users;
   });
 });
 
@@ -93,7 +94,7 @@ AV.Cloud.define('sendEmailAgain', function(request) {
   console.log('准备处理发送邮件');
   let d = new Date();
   console.log(d);
-  api.getUnSubmitUsers().then(users => {
+  return api.getUnSubmitUsers().then(users => {
     console.log('=======================');
     console.log('周六：准备给未提交用户发送邮件：');
     console.log('未提交用户为:');
@@ -114,7 +115,7 @@ AV.Cloud.define('sendEmailwarning', function(request) {
   console.log('准备处理发送邮件');
   let d = new Date();
   console.log(d);
-  api.getUnSubmitUsers().then(users => {
+  return api.getUnSubmitUsers().then(users => {
     console.log('=======================');
     console.log('周日：准备给未提交用户发送邮件：');
     console.log('未提交用户为:');
