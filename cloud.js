@@ -153,7 +153,7 @@ AV.Cloud.define('userSignUp', function (request) {
   const data = request.params;
   const user = request.currentUser;
 
-  const UserVerifyLogs = AV.Object.extend('userVerifyLogs');
+  const UserVerifyLogs = AV.Object.extend('UserVerifyLogs');
   const log = new UserVerifyLogs();
   log.set('type', 'signup');
   log.set('user', user);
@@ -191,7 +191,7 @@ AV.Cloud.define('userSignUp', function (request) {
 AV.Cloud.define('verifyUser', function (request) {
   const data = request.params;
   const user = request.currentUser;
-  const UserVerifyLogs = AV.Object.extend('userVerifyLogs');
+  const UserVerifyLogs = AV.Object.extend('UserVerifyLogs');
   const log = new UserVerifyLogs();
   const query = new AV.query('_user');
 
