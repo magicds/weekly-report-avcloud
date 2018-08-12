@@ -138,11 +138,14 @@ AV.Cloud.define('savePersonData', function (request) {
   let id = request.params.id;
   let data = request.params.data;
   let keys = Object.keys(data);
-  let person = AV.Object.createWithoutData('_User', id);
-  keys.forEach(k => {
-    person.set(k, data[k]);
+  // let person = AV.Object.createWithoutData('_User', id);
+  let query = new AV.query('_User');
+  return query.get(id).then((person) => {
+    keys.forEach(k => {
+      person.set(k, data[k]);
+      return person.save();
+    });
   });
-  return person.save();
 });
 
 // 用户注册
