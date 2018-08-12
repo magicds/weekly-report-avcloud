@@ -173,7 +173,8 @@ AV.Cloud.define('userSignUp', function (request) {
 
     post(JSON.stringify({
       type: 'verify',
-      user: users
+      user: users,
+      verifyUsername: user.attributes.username
     }));
 
     return {
