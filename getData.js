@@ -5,6 +5,11 @@ module.exports = {
   getAllUsers() {
     return new AV.Query('_User').find();
   },
+  getAdminUser() {
+    const query = new AV.Query('_user');
+    query.equalTo('isAdmin', true);
+    return query.find();
+  },
   getCurrWeekReport() {
     const today = new Date();
     const day = today.getDay();
