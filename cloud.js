@@ -45,7 +45,7 @@ function post(data) {
       // console.log(`BODY: ${chunk}`);
     });
     res.on('end', () => {
-      writeLog(info);
+      writeLog('请求参数：<pre>' + JSON.stringify(data, 0, 2) + '</pre><br><br>' + info);
     });
   });
 
