@@ -158,7 +158,7 @@ AV.Cloud.define('userSignUp', function (request) {
   log.set('type', 'signup');
   log.set('user', user);
   log.set('targetUser', user);
-  log.set('info', `${user.attributes.username} 新注册进入的系统，请求验证。`);
+  log.set('info', `${user.attributes.username} 新注册进入系统，请求验证。`);
   return Promise.all(
     [
       log.save(),
