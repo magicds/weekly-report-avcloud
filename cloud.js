@@ -139,7 +139,7 @@ AV.Cloud.define('savePersonData', function (request) {
   let data = request.params.data;
   let keys = Object.keys(data);
   // let person = AV.Object.createWithoutData('_User', id);
-  let query = new AV.query('_User');
+  let query = new AV.Query('_User');
   return query.get(id).then((person) => {
     keys.forEach(k => {
       person.set(k, data[k]);
@@ -193,7 +193,7 @@ AV.Cloud.define('verifyUser', function (request) {
   const user = request.currentUser;
   const UserVerifyLogs = AV.Object.extend('UserVerifyLogs');
   const log = new UserVerifyLogs();
-  const query = new AV.query('_user');
+  const query = new AV.Query('_User');
 
   return query.get(data.targetUser).then(function (tu) {
     if (!tu) {
@@ -211,6 +211,40 @@ AV.Cloud.define('verifyUser', function (request) {
     tu.set('verify', true);
     // 同时提交用户状态和日志
     return Promise.all([tu.save(), log.save()]).then((r) => {
+      return {
+        success: true
+      };
+    }).catch(err => {
+      console.log(err);
+      throw err;
+    })
+  }).catch(err => {
+    console.log(err);
+    throw err;
+  });
+});
+
+// 删除用户
+AV.Cloud.define('deleteUser', function (request) {
+  const data = request.params;
+  const user = request.currentUser;
+  const UserVerifyLogs = AV.Object.extend('UserVerifyLogs');
+  const log = new UserVerifyLogs();
+  const query = new AV.Query('_User');
+
+  return query.get(data.targetUser).then(function (tu) {
+    if (!tu) {
+      throw new Error('目标用户不存在');
+    }
+    if (tu.attributes.verify === true) {
+      throw new Error('目标用户已经通过验证，无法删除！');
+    }
+    // 验证日志
+    log.set('type', 'delete');
+    log.set('user', user);
+    log.set('info', `${user.attributes.username} 删除了用户 ${tu.attributes.username}`);
+    // 同时提交用户状态和日志
+    return Promise.all([tu.destroy(), log.save()]).then((r) => {
       return {
         success: true
       };
