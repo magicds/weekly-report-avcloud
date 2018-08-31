@@ -4,6 +4,8 @@ let api = require('./getData.js');
 const http = require('http');
 const querystring = require('querystring');
 
+const sendEmails = require('./sendmails');
+
 /**
  * 一个简单的云代码方法
  */
@@ -81,9 +83,10 @@ AV.Cloud.define('sendEmail', function (request) {
     // 组织数据发请求
     const data = querystring.stringify({
       user: JSON.stringify(users),
-      type: 'all'
+      type: 'fri'
     });
-    post(data);
+    // post(data);
+    sendEmails(data);
 
     console.log('发送处理完成, 耗时' + (+new Date() - d) + 'ms');
     return users;
@@ -101,9 +104,9 @@ AV.Cloud.define('sendEmailAgain', function (request) {
     console.log('未提交用户为:');
     console.log(JSON.stringify(users, 0, 4));
 
-    post(
+    sendEmails(
       querystring.stringify({
-        type: 'unsubmit',
+        type: 'sat',
         user: JSON.stringify(users)
       })
     );
@@ -122,9 +125,9 @@ AV.Cloud.define('sendEmailwarning', function (request) {
     console.log('未提交用户为:');
     console.log(JSON.stringify(users, 0, 4));
 
-    post(
+    sendEmails(
       querystring.stringify({
-        type: 'warning',
+        type: 'sun',
         user: JSON.stringify(users)
       })
     );
@@ -174,7 +177,7 @@ AV.Cloud.define('userSignUp', function (request) {
       });
     });
 
-    post(querystring.stringify({
+    sendEmails(querystring.stringify({
       type: 'verify',
       user: JSON.stringify(users),
       verifyUsername: user.attributes.username
