@@ -107,7 +107,7 @@ const sendEmails = (data) => {
                 verifyUsername: verifyUsername
             })
         }).then(res => {
-            console.log(`【mial】【${type}】to ${res.accepted} already send`);
+            console.log(`【mial】【${type}】to ${user.name}(${res.accepted}) already send`);
             needNext && sendOneMail(users);
         }).catch(err => {
             console.error(`【mial】【${type}】 send to ${user.name}(${user.emial}) failed`);
