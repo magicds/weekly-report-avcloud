@@ -111,6 +111,7 @@ const sendEmails = (data) => {
             console.log(`【mial】【${type}】to ${res.accepted} already send`);
             needNext && sendOneMail(users);
         }).catch(err => {
+            console.error(`【mial】【${type}】 send to ${user.name}(${user.emial}) failed`);
             console.error(err);
             needNext && sendOneMail(users);
         });
