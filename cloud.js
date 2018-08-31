@@ -81,10 +81,10 @@ AV.Cloud.define('sendEmail', function (request) {
     console.log(JSON.stringify(users, 0, 4));
 
     // 组织数据发请求
-    const data = querystring.stringify({
+    const data = {
       users: JSON.stringify(users),
       type: 'fri'
-    });
+    };
     // post(data);
     sendEmails(data);
 
@@ -104,12 +104,10 @@ AV.Cloud.define('sendEmailAgain', function (request) {
     console.log('未提交用户为:');
     console.log(JSON.stringify(users, 0, 4));
 
-    sendEmails(
-      querystring.stringify({
-        type: 'sat',
-        users: JSON.stringify(users)
-      })
-    );
+    sendEmails({
+      type: 'sat',
+      users: JSON.stringify(users)
+    });
 
     console.log('发送处理完成, 耗时' + (+new Date() - d) + 'ms');
   });
@@ -125,12 +123,10 @@ AV.Cloud.define('sendEmailwarning', function (request) {
     console.log('未提交用户为:');
     console.log(JSON.stringify(users, 0, 4));
 
-    sendEmails(
-      querystring.stringify({
-        type: 'sun',
-        users: JSON.stringify(users)
-      })
-    );
+    sendEmails({
+      type: 'sun',
+      users: JSON.stringify(users)
+    });
 
     console.log('发送处理完成, 耗时' + (+new Date() - d) + 'ms');
   });
@@ -177,11 +173,11 @@ AV.Cloud.define('userSignUp', function (request) {
       });
     });
 
-    sendEmails(querystring.stringify({
+    sendEmails({
       type: 'verify',
       users: JSON.stringify(users),
       verifyUsername: user.attributes.username
-    }));
+    });
 
     return {
       success: true

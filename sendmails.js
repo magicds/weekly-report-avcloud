@@ -77,6 +77,7 @@ const getMailContent = (type, injectedData) => {
 };
 
 const sendEmails = (data) => {
+    console.log('nodemailer 发送邮件:');
     const {
         users,
         type,
