@@ -25,7 +25,10 @@ const transporter = nodemailer.createTransport({
         pass: process.env.SMTP_PWD
     }
 }, {
-    from: process.env.SMTP_USER
+    from: {
+        name: '新点前端周报',
+        address: process.env.SMTP_USER
+    }
 });
 
 transporter.verify(function (error, success) {
