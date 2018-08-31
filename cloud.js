@@ -24,41 +24,6 @@ function writeLog(info, type) {
     console.log('邮件发送日志已记录！');
   });
 }
-// 发起一个post请求
-function post(data) {
-  const options = {
-    hostname: 'fe.epoint.com.cn',
-    port: 8080,
-    path: '/weeklyreport/mail/sendmail.php',
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-      'Content-Length': Buffer.byteLength(data)
-    }
-  };
-
-  const req = http.request(options, res => {
-    console.log(`STATUS: ${res.statusCode}`);
-    console.log(`HEADERS: ${JSON.stringify(res.headers)}`);
-    res.setEncoding('utf8');
-    let info = '';
-    res.on('data', chunk => {
-      info += chunk;
-      // console.log(`BODY: ${chunk}`);
-    });
-    res.on('end', () => {
-      writeLog('请求参数：<pre>' + JSON.stringify(data, 0, 2) + '</pre><br><br>' + info);
-    });
-  });
-
-  req.on('error', e => {
-    console.error(`problem with request: ${e.message}`);
-  });
-
-  // write data to request body
-  req.write(data);
-  req.end();
-}
 
 // 给所有需要填写日志的人发邮件
 AV.Cloud.define('sendEmail', function (request) {
