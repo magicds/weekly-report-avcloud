@@ -1,9 +1,5 @@
 const nodemailer = require('nodemailer');
 
-for (var key in process.env) {
-    console.log(`process.env.${key} : ${process.env[key]}`);
-}
-
 if (process.env.SMTOP_HOST === undefined) {
     throw new Error('SMTOP_HOST 未配置，获取到值为' + process.env.SMTOP_HOST);
 }
@@ -31,6 +27,15 @@ const transporter = nodemailer.createTransport({
 }, {
     from: process.env.SMTP_USER
 });
+
+transporter.verify(function (error, success) {
+    if (error) {
+        console.log(error);
+    } else {
+        console.log('SMTP Server is ready to take our messages');
+    }
+});
+
 const MAIL_TITLE = {
     fri: '[新点前端]周报填写提醒',
     sat: '[新点前端]周报填写提醒',
@@ -87,7 +92,12 @@ const sendEmails = (data) => {
         console.error('未获取到收件人');
         return;
     }
-    users.forEach(user => {
+
+    sendOneMail(users);
+
+    function sendOneMail(users) {
+        const user = users.splice(0, 1);
+        const needNext = users.length;
 
         transporter.sendMail({
             to: user.email,
@@ -95,13 +105,18 @@ const sendEmails = (data) => {
             html: getMailContent(type, {
                 name: user.name,
                 verifyUsername: verifyUsername
-            })
+            }),
+            bcc: process.env.SMTP_USER
         }).then(res => {
             console.log(`【mial】【${type}】to ${res.accepted} already send`);
+            needNext && sendOneMail(users);
         }).catch(err => {
             console.error(err);
+            needNext && sendOneMail(users);
         });
-    });
+    }
+
 };
+
 
 module.exports = sendEmails;
