@@ -105,8 +105,7 @@ const sendEmails = (data) => {
             html: getMailContent(type, {
                 name: user.name,
                 verifyUsername: verifyUsername
-            }),
-            bcc: process.env.SMTP_USER
+            })
         }).then(res => {
             console.log(`【mial】【${type}】to ${res.accepted} already send`);
             needNext && sendOneMail(users);
