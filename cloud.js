@@ -82,7 +82,7 @@ AV.Cloud.define('sendEmail', function (request) {
 
     // 组织数据发请求
     const data = querystring.stringify({
-      user: JSON.stringify(users),
+      users: JSON.stringify(users),
       type: 'fri'
     });
     // post(data);
@@ -107,7 +107,7 @@ AV.Cloud.define('sendEmailAgain', function (request) {
     sendEmails(
       querystring.stringify({
         type: 'sat',
-        user: JSON.stringify(users)
+        users: JSON.stringify(users)
       })
     );
 
@@ -128,7 +128,7 @@ AV.Cloud.define('sendEmailwarning', function (request) {
     sendEmails(
       querystring.stringify({
         type: 'sun',
-        user: JSON.stringify(users)
+        users: JSON.stringify(users)
       })
     );
 
@@ -179,7 +179,7 @@ AV.Cloud.define('userSignUp', function (request) {
 
     sendEmails(querystring.stringify({
       type: 'verify',
-      user: JSON.stringify(users),
+      users: JSON.stringify(users),
       verifyUsername: user.attributes.username
     }));
 

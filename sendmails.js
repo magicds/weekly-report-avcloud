@@ -84,6 +84,7 @@ const sendEmails = (data) => {
     } = data;
     if (!users || !users.length) {
         console.error('未获取到收件人');
+        return;
     }
     users.forEach(user => {
 
