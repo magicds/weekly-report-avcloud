@@ -158,6 +158,12 @@ AV.Cloud.define('verifyUser', function (request) {
   const UserVerifyLogs = AV.Object.extend('UserVerifyLogs');
   const log = new UserVerifyLogs();
   const query = new AV.Query('_User');
+  
+  if(!user.attributes.isAdmin) {
+    return new Promise((resolve, reject)=>{
+      reject('你无权限进行此操作');
+    });
+  }
 
   return query.get(data.targetUser).then(function (tu) {
     if (!tu) {
@@ -196,13 +202,19 @@ AV.Cloud.define('deleteUser', function (request) {
   const log = new UserVerifyLogs();
   const query = new AV.Query('_User');
 
+  if(!user.attributes.isAdmin) {
+    return new Promise((resolve, reject)=>{
+      reject('你无权限进行此操作');
+    });
+  }
+
   return query.get(data.targetUser).then(function (tu) {
     if (!tu) {
       throw new Error('目标用户不存在');
     }
-    if (tu.attributes.verify === true) {
-      throw new Error('目标用户已经通过验证，无法删除！');
-    }
+    // if (tu.attributes.verify === true) {
+    //   throw new Error('目标用户已经通过验证，无法删除！');
+    // }
     // 验证日志
     log.set('type', 'delete');
     log.set('user', user);
