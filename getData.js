@@ -59,7 +59,7 @@ module.exports = {
             user.attributes.email
           ) {
             unsubmitUsers.push({
-              name: user.username,
+              name: user.attributes.username,
               email: user.attributes.email
             });
           }

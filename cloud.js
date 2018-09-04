@@ -4,6 +4,8 @@ let api = require('./getData.js');
 const http = require('http');
 const querystring = require('querystring');
 
+const sendEmails = require('./sendmails');
+
 /**
  * 一个简单的云代码方法
  */
@@ -21,41 +23,6 @@ function writeLog(info, type) {
   log.save().then(res => {
     console.log('邮件发送日志已记录！');
   });
-}
-// 发起一个post请求
-function post(data) {
-  const options = {
-    hostname: 'fe.epoint.com.cn',
-    port: 8080,
-    path: '/weeklyreport/mail/sendmail.php',
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-      'Content-Length': Buffer.byteLength(data)
-    }
-  };
-
-  const req = http.request(options, res => {
-    console.log(`STATUS: ${res.statusCode}`);
-    console.log(`HEADERS: ${JSON.stringify(res.headers)}`);
-    res.setEncoding('utf8');
-    let info = '';
-    res.on('data', chunk => {
-      info += chunk;
-      // console.log(`BODY: ${chunk}`);
-    });
-    res.on('end', () => {
-      writeLog('请求参数：<pre>' + JSON.stringify(data, 0, 2) + '</pre><br><br>' + info);
-    });
-  });
-
-  req.on('error', e => {
-    console.error(`problem with request: ${e.message}`);
-  });
-
-  // write data to request body
-  req.write(data);
-  req.end();
 }
 
 // 给所有需要填写日志的人发邮件
@@ -79,11 +46,12 @@ AV.Cloud.define('sendEmail', function (request) {
     console.log(JSON.stringify(users, 0, 4));
 
     // 组织数据发请求
-    const data = querystring.stringify({
-      user: JSON.stringify(users),
-      type: 'all'
-    });
-    post(data);
+    const data = {
+      users: users,
+      type: 'fri'
+    };
+    // post(data);
+    sendEmails(data);
 
     console.log('发送处理完成, 耗时' + (+new Date() - d) + 'ms');
     return users;
@@ -101,12 +69,10 @@ AV.Cloud.define('sendEmailAgain', function (request) {
     console.log('未提交用户为:');
     console.log(JSON.stringify(users, 0, 4));
 
-    post(
-      querystring.stringify({
-        type: 'unsubmit',
-        user: JSON.stringify(users)
-      })
-    );
+    sendEmails({
+      type: 'sat',
+      users: users
+    });
 
     console.log('发送处理完成, 耗时' + (+new Date() - d) + 'ms');
   });
@@ -122,12 +88,10 @@ AV.Cloud.define('sendEmailwarning', function (request) {
     console.log('未提交用户为:');
     console.log(JSON.stringify(users, 0, 4));
 
-    post(
-      querystring.stringify({
-        type: 'warning',
-        user: JSON.stringify(users)
-      })
-    );
+    sendEmails({
+      type: 'sun',
+      users: users
+    });
 
     console.log('发送处理完成, 耗时' + (+new Date() - d) + 'ms');
   });
@@ -174,11 +138,11 @@ AV.Cloud.define('userSignUp', function (request) {
       });
     });
 
-    post(querystring.stringify({
+    sendEmails({
       type: 'verify',
-      user: JSON.stringify(users),
+      users: users,
       verifyUsername: user.attributes.username
-    }));
+    });
 
     return {
       success: true
@@ -194,6 +158,12 @@ AV.Cloud.define('verifyUser', function (request) {
   const UserVerifyLogs = AV.Object.extend('UserVerifyLogs');
   const log = new UserVerifyLogs();
   const query = new AV.Query('_User');
+  
+  if(!user.attributes.isAdmin) {
+    return new Promise((resolve, reject)=>{
+      reject('你无权限进行此操作');
+    });
+  }
 
   return query.get(data.targetUser).then(function (tu) {
     if (!tu) {
@@ -232,13 +202,19 @@ AV.Cloud.define('deleteUser', function (request) {
   const log = new UserVerifyLogs();
   const query = new AV.Query('_User');
 
+  if(!user.attributes.isAdmin) {
+    return new Promise((resolve, reject)=>{
+      reject('你无权限进行此操作');
+    });
+  }
+
   return query.get(data.targetUser).then(function (tu) {
     if (!tu) {
       throw new Error('目标用户不存在');
     }
-    if (tu.attributes.verify === true) {
-      throw new Error('目标用户已经通过验证，无法删除！');
-    }
+    // if (tu.attributes.verify === true) {
+    //   throw new Error('目标用户已经通过验证，无法删除！');
+    // }
     // 验证日志
     log.set('type', 'delete');
     log.set('user', user);
