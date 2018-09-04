@@ -26,7 +26,7 @@ const transporter = nodemailer.createTransport({
     }
 }, {
     from: {
-        name: '新点前端周报',
+        name: '网站研发部周报',
         address: process.env.SMTP_USER
     }
 });
@@ -40,10 +40,10 @@ transporter.verify(function (error, success) {
 });
 
 const MAIL_TITLE = {
-    fri: '[新点前端]周报填写提醒',
-    sat: '[新点前端]周报填写提醒',
-    sun: '[新点前端]周报填写提醒',
-    verify: '[新点前端]新成员注册验证提醒'
+    fri: '[网站研发部]周报填写提醒',
+    sat: '[网站研发部]周报填写提醒',
+    sun: '[网站研发部]周报填写提醒',
+    verify: '[网站研发部]新成员注册验证提醒'
 };
 const getMailContent = (type, injectedData) => {
     let content = ''
@@ -52,7 +52,7 @@ const getMailContent = (type, injectedData) => {
             content = `
                 <p>${injectedData.name}:</p>
                 <p>您好，今天又是周五啦，请记得填写本周周报：</p>
-                <p><a href="http://fe.epoint.com.cn:8080/weeklyreport/" target="_black">http://fe.epoint.com.cn:8080/weeklyreport/</a></p>
+                <p><a href="http://192.168.201.156:81/weeklyreport/" target="_black">http://192.168.201.156:81/weeklyreport/</a></p>
                 <p>——来自新点前端周报，预祝您周末愉快！</p>
             `
             break;
@@ -60,7 +60,7 @@ const getMailContent = (type, injectedData) => {
             content = `
                 <p>${injectedData.name}:</p>
                 <p>您好，<span style="color:#f1a325;">今天已经是周六了，您还没填写本周周报</span>，请及时点击下方链接进行填写：</p>
-                <p><a href="http://fe.epoint.com.cn:8080/weeklyreport/" target="_black">http://fe.epoint.com.cn:8080/weeklyreport/</a></p>
+                <p><a href="http://192.168.201.156:81/weeklyreport/" target="_black">http://192.168.201.156:81/weeklyreport/</a></p>
                 <p>——来自新点前端周报，祝您周末愉快！</p>
             `
             break;
@@ -68,14 +68,14 @@ const getMailContent = (type, injectedData) => {
             content = `
                 <p>${injectedData.name}:</p>
                 <p>您好，<span style="color:#ea644a;">今天已经是周日了，您还没填写本周周报</span>，请点击下方链接进入填写，务必在今天完成填写</p>
-                <p><a href="http://fe.epoint.com.cn:8080/weeklyreport/" target="_black">http://fe.epoint.com.cn:8080/weeklyreport/</a></p>
+                <p><a href="http://192.168.201.156:81/weeklyreport/" target="_black">http://192.168.201.156:81/weeklyreport/</a></p>
                 <p>再忙也不要忘记填写周报哦！</p>
             `
             break;
         case 'verify':
             content = `
                 <p>${injectedData.name}:</p>
-                <p>您好，<span style="color:#ea644a;">${injectedData.verifyUsername}</span>，已经注册进入周报系统。</p> <p><span style="color:#ea644a;">如果您确认 TA 是团队成员</span>，请及时点击下方链接通过其验证请求（验证通过的用户才能正常使用周报系统）。</p><p><a href="http://fe.epoint.com.cn:8080/weeklyreport/#/main/verify" target="_black">http://fe.epoint.com.cn:8080/weeklyreport/#/main/verify</a></p>
+                <p>您好，<span style="color:#ea644a;">${injectedData.verifyUsername}</span>，已经注册进入周报系统。</p> <p><span style="color:#ea644a;">如果您确认 TA 是团队成员</span>，请及时点击下方链接通过其验证请求（验证通过的用户才能正常使用周报系统）。</p><p><a href="http://192.168.201.156:81/weeklyreport/#/main/verify" target="_black">http://192.168.201.156:81/weeklyreport/#/main/verify</a></p>
             `
             break;
         default:
