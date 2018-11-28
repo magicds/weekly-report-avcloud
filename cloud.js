@@ -250,6 +250,7 @@ AV.Cloud.define('saveAsReport', function (request) {
   const t2 = api.getWeekEnd(date);
   const title = api.getWeekText(date);
 
+  console.log('归档任务起止时间和名称：');
   console.log(t1, t2, title);
 
   return Promise.all([api.getAllUsers(), api.getData(
@@ -269,7 +270,6 @@ AV.Cloud.define('saveAsReport', function (request) {
       field: "createdAt"
     }
   )]).then((r) => {
-    console.log('查询成功');
     if (!r[1].length) {
       console.log('指定时间段内无数据');
       return {
@@ -277,8 +277,8 @@ AV.Cloud.define('saveAsReport', function (request) {
       };
     }
     const reports = api.assignUserReport(r[0], r[1]);
-    console.log('日志归档数据获取成功');
-    console.log(reports);    
+    console.log('日志归档数据获取成功，保存中');
+    console.log(reports);
     // 保存
     return api.saveAsReport(reports[0], title);
   }).catch(err => {

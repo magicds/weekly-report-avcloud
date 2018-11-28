@@ -180,8 +180,8 @@ const api = {
     // 根据title查询是否已经存在
     let query = new AV.Query('Reports');
     query.equalTo('title', title);
-    return query.find().then((r) => {
-      console.log('查找是否已经存在归档： ' + title);
+    console.log('查找是否已经存在归档： ' + title);
+    return query.find().then((r) => {      
       let wk;
       if (r && r.length) {
         console.log('已经存在，进行更新');
@@ -208,7 +208,9 @@ const api = {
       });
 
       return wk.save().then(() => {
-        console.log(`[${title}]周报已经归档！`);
+        var t = `[${title}]周报已经归档！`;
+        console.log(t);
+        return t;
       });
     });
   },
