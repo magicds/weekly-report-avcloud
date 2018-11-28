@@ -241,9 +241,7 @@ AV.Cloud.define('saveAsReport', function (request) {
   let date;
   if (request.params && request.params.date) {
     date = request.params.date;
-    if (date + '' === date) {
-      date = new Date(date);
-    }
+    date = new Date(date.iso);
   } else {
     // 取当前时间 定时在周一凌晨 则向前一天
     date = new Date();
