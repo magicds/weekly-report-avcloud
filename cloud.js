@@ -252,7 +252,7 @@ AV.Cloud.define('saveAsReport', function (request) {
 
   console.log(t1, t2, title);
 
-  Promise.all([api.getAllUsers(), api.getData(
+  return Promise.all([api.getAllUsers(), api.getData(
     "Reports",
     [{
         action: "greaterThanOrEqualTo",
