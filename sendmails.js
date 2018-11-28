@@ -1,20 +1,19 @@
 const nodemailer = require('nodemailer');
 
-console.log(Object.keys(process.env));
 if (process.env.SMTP_HOST === undefined) {
-    throw new Error('SMTP_HOST 未配置，获取到值为' + process.env.SMTP_HOST);
+    console.error('SMTP_HOST 未配置，获取到值为' + process.env.SMTP_HOST);
 }
 if (process.env.SMTP_PORT === undefined) {
-    throw new Error('SMTP_PORT 未配置，获取到值为' + process.env.SMTP_PORT);
+    console.error('SMTP_PORT 未配置，获取到值为' + process.env.SMTP_PORT);
 }
 if (process.env.SMTP_SECURE === undefined) {
-    throw new Error('SMTP_SECURE 未配置，获取到值为' + process.env.SMTP_SECURE);
+    console.error('SMTP_SECURE 未配置，获取到值为' + process.env.SMTP_SECURE);
 }
 if (process.env.SMTP_USER === undefined) {
-    throw new Error('SMTP_USER 未配置，获取到值为' + process.env.SMTP_USER);
+    console.error('SMTP_USER 未配置，获取到值为' + process.env.SMTP_USER);
 }
 if (process.env.SMTP_PWD === undefined) {
-    throw new Error('SMTP_PWD 未配置，获取到值为' + process.env.SMTP_PWD);
+    console.error('SMTP_PWD 未配置，获取到值为' + process.env.SMTP_PWD);
 }
 
 const transporter = nodemailer.createTransport({
