@@ -281,8 +281,6 @@ AV.Cloud.define('saveAsReport', function (request) {
     console.log(reports);    
     // 保存
     return api.saveAsReport(reports[0], title);
-  }).then(() => {
-    // console.log('');
   }).catch(err => {
     console.error(err);
   });
