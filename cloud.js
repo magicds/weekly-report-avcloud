@@ -271,6 +271,7 @@ AV.Cloud.define('saveAsReport', function (request) {
   )]).then((r) => {
     console.log('查询成功');
     if (!r[1].length) {
+      console.log('指定时间段内无数据');
       return {
         msg: '指定时间段内无数据'
       };
