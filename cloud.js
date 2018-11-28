@@ -158,9 +158,9 @@ AV.Cloud.define('verifyUser', function (request) {
   const UserVerifyLogs = AV.Object.extend('UserVerifyLogs');
   const log = new UserVerifyLogs();
   const query = new AV.Query('_User');
-  
-  if(!user.attributes.isAdmin) {
-    return new Promise((resolve, reject)=>{
+
+  if (!user.attributes.isAdmin) {
+    return new Promise((resolve, reject) => {
       reject('你无权限进行此操作');
     });
   }
@@ -202,8 +202,8 @@ AV.Cloud.define('deleteUser', function (request) {
   const log = new UserVerifyLogs();
   const query = new AV.Query('_User');
 
-  if(!user.attributes.isAdmin) {
-    return new Promise((resolve, reject)=>{
+  if (!user.attributes.isAdmin) {
+    return new Promise((resolve, reject) => {
       reject('你无权限进行此操作');
     });
   }
@@ -232,4 +232,57 @@ AV.Cloud.define('deleteUser', function (request) {
     console.log(err);
     throw err;
   });
+});
+
+// 周报归档
+AV.Cloud.define('saveAsReport', function (request) {
+  console.log('\n\n执行归档任务');
+  console.log(request.params);
+  let date;
+  if (request.params && request.params.date) {
+    date = request.params.date;
+    if (date + '' === date) {
+      date = new Date(date);
+    }
+  } else {
+    // 取当前时间 定时在周一凌晨 则向前一天
+    date = new Date();
+    date.setDate(date.getDate() - 2);
+  }
+  const t1 = api.getWeekStart(date);
+  const t2 = api.getWeekEnd(date);
+  const title = api.getWeekText(date);
+
+  console.log(t1, t2, title);
+
+  Promise.all([api.getAllUsers(), api.getData(
+    "Reports",
+    [{
+        action: "greaterThanOrEqualTo",
+        field: "startDate",
+        value: t1
+      },
+      {
+        action: "lessThanOrEqualTo",
+        field: "endDate",
+        value: t2
+      }
+    ], {
+      sort: "asc",
+      field: "startDate"
+    }
+  )]).then((r) => {
+    console.log('查询成功');
+    console.log(r);
+    const reports = api.assignUserReport(r[0], r[1]);
+    console.log('日志归档数据获取成功');
+    console.log(reports);
+    // 保存
+    return api.saveAsReport(reports[0], title);
+  }).then(() => {
+    // console.log('');
+  }).catch(err => {
+    console.error(err);
+  });
+
 });
