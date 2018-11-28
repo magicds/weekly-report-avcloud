@@ -278,7 +278,6 @@ AV.Cloud.define('saveAsReport', function (request) {
     }
     const reports = api.assignUserReport(r[0], r[1]);
     console.log('日志归档数据获取成功，保存中');
-    console.log(reports);
     // 保存
     return api.saveAsReport(reports[0], title);
   }).catch(err => {
