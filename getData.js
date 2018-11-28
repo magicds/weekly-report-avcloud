@@ -115,6 +115,8 @@ const api = {
     return query.find();
   },
   assignUserReport(users, logs) {
+    console.log('待处理数据如下：');
+    console.log(user[0], logs[0]);
     const userMap = new Map();
     users.forEach(user => {
       userMap.set(user.objectId, {

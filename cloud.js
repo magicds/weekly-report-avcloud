@@ -270,15 +270,14 @@ AV.Cloud.define('saveAsReport', function (request) {
     }
   )]).then((r) => {
     console.log('查询成功');
-    console.log(r);
-    const reports = api.assignUserReport(r[0], r[1]);
-    console.log('日志归档数据获取成功');
-    console.log(reports);
-    if (!reports.length) {
+    if (!r[1].length) {
       return {
         msg: '指定时间段内无数据'
       };
     }
+    const reports = api.assignUserReport(r[0], r[1]);
+    console.log('日志归档数据获取成功');
+    console.log(reports);    
     // 保存
     return api.saveAsReport(reports[0], title);
   }).then(() => {
