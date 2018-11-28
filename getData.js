@@ -133,18 +133,19 @@ const api = {
     const reports = [];
     logs.forEach(log => {
       u = userMap.get(log.attributes.userId);
-      if (log.attributes.report.workList) {
-        log.attributes.report.workList.forEach(item => {
+      let report = JSON.parse(log.attributes.report);
+      if (report.workList) {
+        report.workList.forEach(item => {
           delete item.id;
         });
       }
-      if (log.attributes.report.leaveList) {
-        log.attributes.report.leaveList.forEach(item => {
+      if (report.leaveList) {
+        report.leaveList.forEach(item => {
           delete item.id;
         });
       }
       if (u) {
-        reports.push(Object.assign({}, u, log.attributes.report, {
+        reports.push(Object.assign({}, u, report, {
           reportDate: log.createdAt
         }));
       }
@@ -190,7 +191,7 @@ const api = {
         wk = new WeekReport();
       }
       Object.keys(report).forEach((k) => {
-        let d = item[k];
+        let d = report[k];
         wk.set(k, d);
       });
       wk.set('ACL', {
