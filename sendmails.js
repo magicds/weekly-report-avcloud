@@ -1,6 +1,6 @@
 const nodemailer = require('nodemailer');
 
-console.log(process.env);
+console.log(Object.keys(process.env));
 if (process.env.SMTP_HOST === undefined) {
     throw new Error('SMTP_HOST 未配置，获取到值为' + process.env.SMTP_HOST);
 }
