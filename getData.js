@@ -181,6 +181,8 @@ const api = {
     let query = new AV.Query('Reports');
     query.equalTo('title', title);
     return query.find().then((r) => {
+      console.log('查找是否已经存在归档： '+title);
+      console.log(r);
       let wk;
       if (r.results) {
         var id = r.results[0].id;
