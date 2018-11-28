@@ -253,20 +253,20 @@ AV.Cloud.define('saveAsReport', function (request) {
   console.log(t1, t2, title);
 
   return Promise.all([api.getAllUsers(), api.getData(
-    "Reports",
+    "Logs",
     [{
         action: "greaterThanOrEqualTo",
-        field: "startDate",
+        field: "createdAt",
         value: t1
       },
       {
         action: "lessThanOrEqualTo",
-        field: "endDate",
+        field: "createdAt",
         value: t2
       }
     ], {
       sort: "asc",
-      field: "startDate"
+      field: "createdAt"
     }
   )]).then((r) => {
     console.log('查询成功');
