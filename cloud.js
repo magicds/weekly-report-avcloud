@@ -237,7 +237,6 @@ AV.Cloud.define('deleteUser', function (request) {
 // 周报归档
 AV.Cloud.define('saveAsReport', function (request) {
   console.log('\n\n执行归档任务');
-  console.log(request.params);
   let date;
   if (request.params && request.params.date) {
     date = request.params.date;
@@ -275,6 +274,11 @@ AV.Cloud.define('saveAsReport', function (request) {
     const reports = api.assignUserReport(r[0], r[1]);
     console.log('日志归档数据获取成功');
     console.log(reports);
+    if (!reports.length) {
+      return {
+        msg: '指定时间段内无数据'
+      };
+    }
     // 保存
     return api.saveAsReport(reports[0], title);
   }).then(() => {
