@@ -182,13 +182,14 @@ const api = {
     query.equalTo('title', title);
     return query.find().then((r) => {
       console.log('查找是否已经存在归档： '+title);
-      console.log(r);
       let wk;
-      if (r.results) {
-        var id = r.results[0].id;
+      if (r && r.length) {
+        console.log('已经存在，进行更新');
+        var id = r[0].id;
         wk = AV.Object.createWithoutData('Reports', id);
       } else {
         // 不存在
+        console.log('不存在，新增');
         const WeekReport = AV.Object.extend('Reports');
         wk = new WeekReport();
       }
