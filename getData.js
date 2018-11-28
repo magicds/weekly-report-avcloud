@@ -132,7 +132,7 @@ const api = {
     // 形成带人员信息的周报数组
     const reports = [];
     logs.forEach(log => {
-      u = userMap.get(log.userId);
+      u = userMap.get(log.attributes.userId);
       if (log.attributes.report.workList) {
         log.attributes.report.workList.forEach(item => {
           delete item.id;
