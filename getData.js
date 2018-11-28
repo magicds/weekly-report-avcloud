@@ -116,7 +116,7 @@ const api = {
   },
   assignUserReport(users, logs) {
     console.log('待处理数据如下：');
-    console.log(logs[0].attributes);
+    console.log(JSON.stringify(logs[0].attributes));
     const userMap = new Map();
     users.forEach(user => {
       userMap.set(user.id, {
