@@ -116,11 +116,11 @@ const api = {
   },
   assignUserReport(users, logs) {
     console.log('待处理数据如下：');
-    console.log(users[0], logs[0]);
+    console.log(logs[0].attributes);
     const userMap = new Map();
     users.forEach(user => {
-      userMap.set(user.objectId, {
-        userId: user.objectId,
+      userMap.set(user.id, {
+        userId: user.id,
         username: user.attributes.username,
         extInfo: user.attributes.extInfo,
         groupIndex: user.attributes.groupIndex,
@@ -133,14 +133,13 @@ const api = {
     const reports = [];
     logs.forEach(log => {
       u = userMap.get(log.userId);
-      log.report = JSON.parse(log.attributes.report);
-      if (log.report.workList) {
-        log.report.workList.forEach(item => {
+      if (log.attributes.report.workList) {
+        log.attributes.report.workList.forEach(item => {
           delete item.id;
         });
       }
-      if (log.report.leaveList) {
-        log.report.leaveList.forEach(item => {
+      if (log.attributes.report.leaveList) {
+        log.attributes.report.leaveList.forEach(item => {
           delete item.id;
         });
       }
