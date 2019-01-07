@@ -216,23 +216,26 @@ AV.Cloud.define('deleteUser', function (request) {
       if (!tu) {
         throw new Error('目标用户不存在');
       }
-      // if (tu.attributes.verify === true) {
-      //   throw new Error('目标用户已经通过验证，无法删除！');
-      // }
       // 验证日志
       log.set('type', 'delete');
       log.set('user', user);
       log.set('info', `${user.attributes.username} 删除了用户 ${tu.attributes.username}`);
+
+      const promiseArr = [log.save()];
+      if (tu.attributes.verify === true) {
+        // 已经验证通过的用户仅做标记删除
+        tu.set('isDeleted', true);
+        promiseArr.push(tu.save());
+      } else {
+        promiseArr.push(tu.destroy());
+      }
+
       // 同时提交用户状态和日志
       return Promise.all([tu.destroy(), log.save()])
         .then(r => {
           return {
             success: true
           };
-        })
-        .catch(err => {
-          console.log(err);
-          throw err;
         });
     })
     .catch(err => {
