@@ -1,5 +1,5 @@
 let AV = require('leanengine');
-let api = require('./getData.js');
+let api = require('../getData.js');
 
 AV.Cloud.define('assignUserAndGroup', function (request) {
   return Promise.all([api.getAllUser(), api.getData('Group')]).then((res) => {
