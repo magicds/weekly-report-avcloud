@@ -109,6 +109,9 @@ AV.Cloud.define('savePersonData', function (request) {
   let query = new AV.Query('_User');
   return query.get(id).then(person => {
     keys.forEach(k => {
+      if(k == 'group') {
+        data[k] = AV.Object.createWithoutData('Group', data[k]);
+      }
       person.set(k, data[k]);
     });
     return person.save();
