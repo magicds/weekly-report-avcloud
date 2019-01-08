@@ -231,7 +231,7 @@ AV.Cloud.define('deleteUser', function (request) {
       }
 
       // 同时提交用户状态和日志
-      return Promise.all([tu.destroy(), log.save()])
+      return Promise.all(promiseArr)
         .then(r => {
           return {
             success: true
