@@ -3,11 +3,16 @@ let Promise = require('bluebird');
 
 const api = {
   getAllUsers() {
-    return new AV.Query('_User').find();
+    const query = new AV.Query('_user');
+    query.notEqualTo('isDeleted', true);
+    query.include('group');
+    return query.find();
   },
   getAdminUser() {
     const query = new AV.Query('_user');
     query.equalTo('isAdmin', true);
+    query.notEqualTo('isDeleted', true);
+    query.include('group');
     return query.find();
   },
   getCurrWeekReport() {
@@ -53,11 +58,7 @@ const api = {
         });
 
         users.forEach(user => {
-          if (
-            !submitUser[user.id] &&
-            !user.attributes.noReport &&
-            user.attributes.email
-          ) {
+          if (!submitUser[user.id] && !user.attributes.noReport && user.attributes.email) {
             unsubmitUsers.push({
               name: user.attributes.username,
               email: user.attributes.email
@@ -181,7 +182,7 @@ const api = {
     let query = new AV.Query('Reports');
     query.equalTo('title', title);
     console.log('查找是否已经存在归档： ' + title);
-    return query.find().then((r) => {      
+    return query.find().then((r) => {
       let wk;
       if (r && r.length) {
         console.log('已经存在，进行更新');
