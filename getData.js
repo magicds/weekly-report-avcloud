@@ -1,5 +1,4 @@
 let AV = require('leanengine');
-let Promise = require('bluebird');
 
 const api = {
   getAllUsers() {
@@ -124,8 +123,8 @@ const api = {
         userId: user.id,
         username: user.attributes.username,
         extInfo: user.attributes.extInfo,
-        groupIndex: user.attributes.groupIndex,
-        groupName: user.attributes.groupName,
+        groupIndex: user.attributes.group.attributes.index,
+        groupName: user.attributes.group.attributes.name,
         memberIndex: user.attributes.memberIndex
       });
     });
