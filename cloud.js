@@ -101,14 +101,20 @@ AV.Cloud.define('sendEmailwarning', function (request) {
 AV.Cloud.define('savePersonData', function (request) {
   let id = request.params.id;
   let data = request.params.data;
+  if (!id || !data) {
+    return Promise.reject('必须指定人员和要保存的数据！');
+  }
   let keys = Object.keys(data);
   // let person = AV.Object.createWithoutData('_User', id);
   let query = new AV.Query('_User');
-  return query.get(id).then((person) => {
+  return query.get(id).then(person => {
     keys.forEach(k => {
+      if(k == 'group') {
+        data[k] = AV.Object.createWithoutData('Group', data[k]);
+      }
       person.set(k, data[k]);
-      return person.save();
     });
+    return person.save();
   });
 });
 
@@ -123,12 +129,7 @@ AV.Cloud.define('userSignUp', function (request) {
   log.set('user', user);
   log.set('targetUser', user);
   log.set('info', `${user.attributes.username} 新注册进入系统，请求验证。`);
-  return Promise.all(
-    [
-      log.save(),
-      api.getAdminUser()
-    ]
-  ).then(result => {
+  return Promise.all([log.save(), api.getAdminUser()]).then(result => {
     const r2 = result[1];
     const users = [];
     r2.forEach(item => {
@@ -147,7 +148,6 @@ AV.Cloud.define('userSignUp', function (request) {
     return {
       success: true
     };
-
   });
 });
 
@@ -158,40 +158,45 @@ AV.Cloud.define('verifyUser', function (request) {
   const UserVerifyLogs = AV.Object.extend('UserVerifyLogs');
   const log = new UserVerifyLogs();
   const query = new AV.Query('_User');
-  
-  if(!user.attributes.isAdmin) {
-    return new Promise((resolve, reject)=>{
+
+  if (!user.attributes.isAdmin) {
+    return new Promise((resolve, reject) => {
       reject('你无权限进行此操作');
     });
   }
 
-  return query.get(data.targetUser).then(function (tu) {
-    if (!tu) {
-      throw new Error('目标用户不存在');
-    }
-    if (tu.attributes.verify === true) {
-      throw new Error('目标用户已经通过验证');
-    }
-    // 验证日志
-    log.set('type', 'verify');
-    log.set('user', user);
-    log.set('targetUser', tu);
-    log.set('info', `${user.attributes.username} 通过了 ${tu.attributes.username} 的验证请求。`);
-    // 更新用户验证状态
-    tu.set('verify', true);
-    // 同时提交用户状态和日志
-    return Promise.all([tu.save(), log.save()]).then((r) => {
-      return {
-        success: true
-      };
-    }).catch(err => {
+  return query
+    .get(data.targetUser)
+    .then(function (tu) {
+      if (!tu) {
+        throw new Error('目标用户不存在');
+      }
+      if (tu.attributes.verify === true) {
+        throw new Error('目标用户已经通过验证');
+      }
+      // 验证日志
+      log.set('type', 'verify');
+      log.set('user', user);
+      log.set('targetUser', tu);
+      log.set('info', `${user.attributes.username} 通过了 ${tu.attributes.username} 的验证请求。`);
+      // 更新用户验证状态
+      tu.set('verify', true);
+      // 同时提交用户状态和日志
+      return Promise.all([tu.save(), log.save()])
+        .then(r => {
+          return {
+            success: true
+          };
+        })
+        .catch(err => {
+          console.log(err);
+          throw err;
+        });
+    })
+    .catch(err => {
       console.log(err);
       throw err;
-    })
-  }).catch(err => {
-    console.log(err);
-    throw err;
-  });
+    });
 });
 
 // 删除用户
@@ -202,34 +207,98 @@ AV.Cloud.define('deleteUser', function (request) {
   const log = new UserVerifyLogs();
   const query = new AV.Query('_User');
 
-  if(!user.attributes.isAdmin) {
-    return new Promise((resolve, reject)=>{
+  if (!user.attributes.isAdmin) {
+    return new Promise((resolve, reject) => {
       reject('你无权限进行此操作');
     });
   }
 
-  return query.get(data.targetUser).then(function (tu) {
-    if (!tu) {
-      throw new Error('目标用户不存在');
-    }
-    // if (tu.attributes.verify === true) {
-    //   throw new Error('目标用户已经通过验证，无法删除！');
-    // }
-    // 验证日志
-    log.set('type', 'delete');
-    log.set('user', user);
-    log.set('info', `${user.attributes.username} 删除了用户 ${tu.attributes.username}`);
-    // 同时提交用户状态和日志
-    return Promise.all([tu.destroy(), log.save()]).then((r) => {
-      return {
-        success: true
-      };
-    }).catch(err => {
+  return query
+    .get(data.targetUser)
+    .then(function (tu) {
+      if (!tu) {
+        throw new Error('目标用户不存在');
+      }
+      // 验证日志
+      log.set('type', 'delete');
+      log.set('user', user);
+      log.set('info', `${user.attributes.username} 删除了用户 ${tu.attributes.username}`);
+
+      const promiseArr = [log.save()];
+      if (tu.attributes.verify === true) {
+        // 已经验证通过的用户仅做标记删除
+        tu.set('isDeleted', true);
+        promiseArr.push(tu.save());
+      } else {
+        promiseArr.push(tu.destroy());
+      }
+
+      // 同时提交用户状态和日志
+      return Promise.all(promiseArr)
+        .then(r => {
+          return {
+            success: true
+          };
+        });
+    })
+    .catch(err => {
       console.log(err);
       throw err;
+    });
+});
+
+// 周报归档
+AV.Cloud.define('saveAsReport', function (request) {
+  console.log('\n\n执行归档任务');
+  let date;
+  if (request.params && request.params.date) {
+    date = request.params.date;
+    date = new Date(date.iso);
+  } else {
+    // 取当前时间 定时在周一凌晨 则向前一天
+    date = new Date();
+    date.setDate(date.getDate() - 2);
+  }
+  const t1 = api.getWeekStart(date);
+  const t2 = api.getWeekEnd(date);
+  const title = api.getWeekText(date);
+
+  console.log('归档任务起止时间和名称：');
+  console.log(t1, t2, title);
+
+  return Promise.all([
+      api.getAllUsers(),
+      api.getData(
+        'Logs',
+        [{
+            action: 'greaterThanOrEqualTo',
+            field: 'createdAt',
+            value: t1
+          },
+          {
+            action: 'lessThanOrEqualTo',
+            field: 'createdAt',
+            value: t2
+          }
+        ], {
+          sort: 'asc',
+          field: 'createdAt'
+        }
+      )
+    ])
+    .then(r => {
+      if (!r[1].length) {
+        console.log('指定时间段内无数据');
+        return {
+          msg: '指定时间段内无数据'
+        };
+      }
+      const reports = api.assignUserReport(r[0], r[1]);
+      console.log('日志归档数据获取成功，保存中');
+      // 保存
+      return api.saveAsReport(reports[0], title);
     })
-  }).catch(err => {
-    console.log(err);
-    throw err;
-  });
+    .catch(err => {
+      console.error(err);
+    });
 });

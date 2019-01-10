@@ -1,25 +1,25 @@
 const nodemailer = require('nodemailer');
 
-if (process.env.SMTOP_HOST === undefined) {
-    throw new Error('SMTOP_HOST 未配置，获取到值为' + process.env.SMTOP_HOST);
+if (process.env.SMTP_HOST === undefined) {
+    console.error('SMTP_HOST 未配置，获取到值为' + process.env.SMTP_HOST);
 }
-if (process.env.SMTOP_PORT === undefined) {
-    throw new Error('SMTOP_PORT 未配置，获取到值为' + process.env.SMTOP_PORT);
+if (process.env.SMTP_PORT === undefined) {
+    console.error('SMTP_PORT 未配置，获取到值为' + process.env.SMTP_PORT);
 }
-if (process.env.SMTOP_SECURE === undefined) {
-    throw new Error('SMTOP_SECURE 未配置，获取到值为' + process.env.SMTOP_SECURE);
+if (process.env.SMTP_SECURE === undefined) {
+    console.error('SMTP_SECURE 未配置，获取到值为' + process.env.SMTP_SECURE);
 }
 if (process.env.SMTP_USER === undefined) {
-    throw new Error('SMTP_USER 未配置，获取到值为' + process.env.SMTP_USER);
+    console.error('SMTP_USER 未配置，获取到值为' + process.env.SMTP_USER);
 }
 if (process.env.SMTP_PWD === undefined) {
-    throw new Error('SMTP_PWD 未配置，获取到值为' + process.env.SMTP_PWD);
+    console.error('SMTP_PWD 未配置，获取到值为' + process.env.SMTP_PWD);
 }
 
 const transporter = nodemailer.createTransport({
-    host: process.env.SMTOP_HOST,
-    port: process.env.SMTOP_PORT,
-    secure: process.env.SMTOP_SECURE,
+    host: process.env.SMTP_HOST,
+    port: process.env.SMTP_PORT,
+    secure: process.env.SMTP_SECURE,
     auth: {
         user: process.env.SMTP_USER,
         pass: process.env.SMTP_PWD
