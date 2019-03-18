@@ -115,8 +115,6 @@ const api = {
     return query.find();
   },
   assignUserReport(users, logs) {
-    console.log('待处理数据如下：');
-    console.log(JSON.stringify(logs[0].attributes));
     const userMap = new Map();
     users.forEach(user => {
       userMap.set(user.id, {
@@ -208,9 +206,9 @@ const api = {
       });
 
       return wk.save().then(() => {
-        var t = `[${title}]周报已经归档！`;
-        console.log(t);
-        return t;
+        var msg = `[${title}]周报已经归档！`;
+        console.log(msg);
+        return {msg};
       });
     });
   },
