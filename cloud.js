@@ -254,8 +254,7 @@ AV.Cloud.define('saveAsReport', function (request) {
   if (request.params && request.params.date) {
     date = request.params.date;
     console.log('request.params.date', request.params.date);
-    date = new Date(date.iso);
-    console.log('date iso', date.iso);
+    date = new Date(date);
     console.log('date', date);
   } else {
     // 取当前时间 定时在周一凌晨 则向前一天
