@@ -17,20 +17,21 @@ AV.Cloud.define('archiveReport', function (request) {
     }
 
     // 逐周调用 。。。
-    const archiveArr = [];
     console.log(`开始归档 ${dateStart} 到 ${dateEnd} 之间的周报`);
-    while (+dateStart <= +dateEnd) {
-      archiveArr.push(
-        AV.Cloud.run('saveAsReport', {
-          date: new Date(dateStart.getTime())
-        })
-      );
-
-      // 下一周
-      dateStart.setDate(dateStart.getDate() + 7);
+    // promise.all 直接全部发起会 导致 429 Too many requests.
+    // 暂时逐个发出
+    function run() {
+      return AV.Cloud.run('saveAsReport', {
+        date: new Date(dateStart.getTime())
+      }).finally(() => {
+        dateStart.setDate(dateStart.getDate() + 7);
+        if (+dateStart <= +dateEnd) {
+          return run();
+        }
+      });
     }
 
-    return Promise.all(archiveArr);
+    return run();
   }).catch(error => {
     console.error(error);
     return error;
