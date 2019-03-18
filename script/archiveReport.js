@@ -1,5 +1,4 @@
 let AV = require('leanengine');
-let api = require('../getData.js');
 
 // 归档历史周报
 AV.Cloud.define('archiveReport', function (request) {
@@ -35,5 +34,5 @@ AV.Cloud.define('archiveReport', function (request) {
   }).catch(error => {
     console.error(error);
     return error;
-  })
+  });
 });
