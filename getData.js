@@ -57,7 +57,8 @@ const api = {
         });
 
         users.forEach(user => {
-          if (!submitUser[user.id] && !user.attributes.noReport && user.attributes.email) {
+          // 未提交 && 非免填 && 用户已验证 && 用户设置了email
+          if (!submitUser[user.id] && !user.attributes.noReport && user.attributes.verify && user.attributes.email) {
             unsubmitUsers.push({
               name: user.attributes.username,
               email: user.attributes.email
