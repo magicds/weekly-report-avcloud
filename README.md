@@ -9,9 +9,9 @@
 需要以下配置：
 
 ```js
-process.env.SMTOP_HOST, // SMTP host
-process.env.SMTOP_PORT, // smtp 端口
-process.env.SMTOP_SECURE, // smtp SMTOP_SECURE
+process.env.SMTP_HOST, // SMTP host
+process.env.SMTP_PORT, // smtp 端口
+process.env.SMTP_SECURE, // smtp SMTOP_SECURE
 process.env.SMTP_USER, // smtp 授权用户
 process.env.SMTP_PWD // smtp 授权密码
 ```
