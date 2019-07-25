@@ -33,8 +33,8 @@ AV.Cloud.define('sendEmail', function (request) {
   return api.getAllUsers().then(result => {
     let users = [];
     result.forEach(item => {
-      // 排除不用填写日志的人
-      if (!item.attributes.noReport && item.attributes.email) {
+      // 排除不用填写日志和未验证的用户
+      if (!item.attributes.noReport && item.attributes.verify && item.attributes.email) {
         users.push({
           name: item.attributes.username,
           email: item.attributes.email
