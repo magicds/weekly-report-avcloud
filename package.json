@@ -17,7 +17,7 @@
     "express": "^4.17.3",
     "leancloud-storage": "^3.0.0",
     "leanengine": "^3.0.0",
-    "nodemailer": "^4.6.8"
+    "nodemailer": "^6.6.1"
   },
   "devDependencies": {
     "nodemon": "^1.11.0"
